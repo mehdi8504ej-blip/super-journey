@@ -1,0 +1,45 @@
+# Repo contains only render.yaml + bundle.py; bundle.py unpacks the full project during the build.
+# Render Blueprint. One Web Service (webhook mode) + one PostgreSQL database.
+# No secret values live here: `sync: false` means Render asks you for the value in the dashboard.
+# Plans are set to `free` so it deploys from a phone with no billing. Free Postgres expires after ~30 days and free web
+# services sleep when idle: upgrade both in the dashboard for a real launch.
+# Only OWNER_TELEGRAM_ID is asked (BOT_TOKEN is set in app/config.py); WEBHOOK_SECRET is derived from APP_SECRET_KEY; PAYMENT_* can be added later.
+services:
+  - type: web
+    name: growth-marketplace
+    runtime: python
+    plan: free
+    buildCommand: python bundle.py && pip install -r requirements.txt
+    # Migrations run first under a PostgreSQL advisory lock, so concurrent instances cannot collide.
+    startCommand: python -m scripts.migrate && uvicorn app.web:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.3
+      - key: APP_ENV
+        value: production
+      - key: BOT_MODE
+        value: webhook
+      - key: DEFAULT_LANGUAGE
+        value: fa
+      - key: DEFAULT_TIMEZONE
+        value: Asia/Tehran
+      - key: LOG_LEVEL
+        value: INFO
+      - key: OWNER_TELEGRAM_USERNAME
+        value: Kimlar_trzn
+      - key: DATABASE_URL
+        fromDatabase:
+          name: growth-db
+          property: connectionString
+      - key: APP_SECRET_KEY
+        generateValue: true
+      - key: OWNER_TELEGRAM_ID
+        sync: false
+
+databases:
+  - name: growth-db
+    plan: free
+    databaseName: growth
+    user: growth
+    ipAllowList: []   # internal connections only (the web service connects over Render's private network)
