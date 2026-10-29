@@ -16,8 +16,10 @@ const server = http.createServer((req, res) => {
   try { u = decodeURIComponent((req.url || '/').split('?')[0]); } catch (e) { res.writeHead(400); res.end(); return; }
   if (u === '/health') { res.end('ok'); return; }
   if (u === '/') u = '/index.html';
-  const f = path.normalize(path.join(PUB, u));
-  if (!f.startsWith(PUB)) { res.writeHead(403); res.end(); return; }
+  if (u !== '/index.html') { res.writeHead(404); res.end('not found'); return; }
+  // index.html یا کنار server.js هست یا داخل پوشه‌ی public
+  let f = path.join(__dirname, 'index.html');
+  if (!fs.existsSync(f)) f = path.join(PUB, 'index.html');
   fs.readFile(f, (e, d) => {
     if (e) { res.writeHead(404); res.end('not found'); return; }
     const h = { 'Content-Type': MIME[path.extname(f)] || 'application/octet-stream' };
