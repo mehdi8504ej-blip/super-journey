@@ -1,0 +1,252 @@
+[
+  {
+    "pass": "pxv4-xk58-44cb",
+    "name": "کورو",
+    "color": "#ff4a4a",
+    "look": {
+      "robe": "#15151b",
+      "robe2": "#24242f",
+      "trim": "#d8b050",
+      "skin": "#eabe96",
+      "eyes": "#ff69b4",
+      "hat": "crown",
+      "crown": "#f4c84c",
+      "gem": "#d8283c",
+      "mask": 1
+    },
+    "pet": {
+      "kind": "fox",
+      "name": "شبح",
+      "c1": "#2a2a36",
+      "c2": "#14141a",
+      "c3": "#ff69b4",
+      "eye": "#ff69b4"
+    },
+    "house": {
+      "name": "خانه‌ی کورو",
+      "theme": {
+        "f1": "#2a2630",
+        "f2": "#322e3a",
+        "w": "#3a3446",
+        "t": "#d8b050",
+        "r1": "#7a1e3a",
+        "r2": "#a02848"
+      },
+      "L": "bed",
+      "C": "throne",
+      "R": "fountain",
+      "wall": [
+        "banner",
+        "window",
+        "rack",
+        "lantern"
+      ],
+      "items": {
+        "coin": 500,
+        "gold": 20,
+        "ruby": 10
+      }
+    }
+  },
+  {
+    "pass": "gg5p-cwfh-r9dm",
+    "name": "سورا",
+    "color": "#4aa8ff",
+    "look": {
+      "robe": "#1c2a4a",
+      "robe2": "#14203a",
+      "trim": "#8ad0ff",
+      "skin": "#f0c8a0",
+      "eyes": "#58d8ff",
+      "hat": "halo",
+      "crown": "#bfeaff",
+      "gem": "#58d8ff",
+      "mask": 1
+    },
+    "pet": {
+      "kind": "wolf",
+      "name": "یخی",
+      "c1": "#dfe9f4",
+      "c2": "#9ab0c8",
+      "c3": "#58d8ff",
+      "eye": "#58d8ff"
+    },
+    "house": {
+      "name": "خانه‌ی سورا",
+      "theme": {
+        "f1": "#cfd8e4",
+        "f2": "#c2ccda",
+        "w": "#e8eef6",
+        "t": "#4a78b8",
+        "r1": "#2a4a8a",
+        "r2": "#3a62aa"
+      },
+      "L": "shelf",
+      "C": "aquarium",
+      "R": "garden",
+      "wall": [
+        "window",
+        "scroll",
+        "window",
+        "banner"
+      ],
+      "items": {
+        "coin": 300,
+        "amethyst": 15,
+        "crystal": 15,
+        "elixir": 5
+      }
+    }
+  },
+  {
+    "pass": "7uf6-szjz-uxss",
+    "name": "هانا",
+    "color": "#ff8ad0",
+    "look": {
+      "robe": "#5a1f4a",
+      "robe2": "#3a1230",
+      "trim": "#ffd870",
+      "skin": "#f0c8a0",
+      "eyes": "#2a1a3a",
+      "hair": "#2a1020",
+      "hat": "horns",
+      "crown": "#ffd870",
+      "gem": "#ff4a9a",
+      "mask": 0
+    },
+    "pet": {
+      "kind": "dragon",
+      "name": "آتیش",
+      "c1": "#e8502a",
+      "c2": "#8a2a10",
+      "c3": "#ffd060",
+      "eye": "#ffe070"
+    },
+    "house": {
+      "name": "خانه‌ی هانا",
+      "theme": {
+        "f1": "#8a5a3a",
+        "f2": "#7a4a2e",
+        "w": "#c8a878",
+        "t": "#6a2a1a",
+        "r1": "#c02a3a",
+        "r2": "#e8503a"
+      },
+      "L": "weapons",
+      "C": "table",
+      "R": "forge",
+      "wall": [
+        "lantern",
+        "rack",
+        "scroll",
+        "lantern"
+      ],
+      "items": {
+        "coin": 400,
+        "iron": 40,
+        "gold": 15,
+        "potion": 8
+      }
+    }
+  },
+  {
+    "pass": "n42q-uzeu-jut6",
+    "name": "یوکی",
+    "color": "#ffe070",
+    "look": {
+      "robe": "#e8e8f0",
+      "robe2": "#b8b8c8",
+      "trim": "#ff8ad0",
+      "skin": "#f0c8a0",
+      "eyes": "#ff4a4a",
+      "hat": "none",
+      "crown": "#ffffff",
+      "gem": "#ff8ad0",
+      "mask": 1
+    },
+    "pet": {
+      "kind": "cat",
+      "name": "مهتاب",
+      "c1": "#f4f0f8",
+      "c2": "#c8bcd8",
+      "c3": "#ff8ad0",
+      "eye": "#ff4a4a"
+    },
+    "house": {
+      "name": "خانه‌ی یوکی",
+      "theme": {
+        "f1": "#e8d8e0",
+        "f2": "#dcc8d4",
+        "w": "#f4e4ee",
+        "t": "#c85a8a",
+        "r1": "#d86a9a",
+        "r2": "#f08ab4"
+      },
+      "L": "bed",
+      "C": "aquarium",
+      "R": "garden",
+      "wall": [
+        "scroll",
+        "window",
+        "banner",
+        "window"
+      ],
+      "items": {
+        "coin": 350,
+        "ruby": 12,
+        "crystal": 10,
+        "potion": 6
+      }
+    }
+  },
+  {
+    "pass": "h6aa-kp8d-byrk",
+    "name": "رین",
+    "color": "#b080ff",
+    "look": {
+      "robe": "#3a1a5a",
+      "robe2": "#2a1040",
+      "trim": "#c080ff",
+      "skin": "#eabe96",
+      "eyes": "#e0a0ff",
+      "hat": "crown",
+      "crown": "#c8a0ff",
+      "gem": "#ff4a9a",
+      "mask": 1
+    },
+    "pet": {
+      "kind": "dragon",
+      "name": "رعد",
+      "c1": "#6a3ac8",
+      "c2": "#3a1a7a",
+      "c3": "#c8a0ff",
+      "eye": "#ffe070"
+    },
+    "house": {
+      "name": "خانه‌ی رین",
+      "theme": {
+        "f1": "#2a2040",
+        "f2": "#241a38",
+        "w": "#3a2a5a",
+        "t": "#c080ff",
+        "r1": "#4a2a8a",
+        "r2": "#6a3ac8"
+      },
+      "L": "shelf",
+      "C": "throne",
+      "R": "forge",
+      "wall": [
+        "lantern",
+        "banner",
+        "window",
+        "rack"
+      ],
+      "items": {
+        "coin": 600,
+        "amethyst": 25,
+        "scrystal": 5,
+        "elixir": 6
+      }
+    }
+  }
+]

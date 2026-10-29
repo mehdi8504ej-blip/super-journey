@@ -1,0 +1,8 @@
+{
+  "name": "samurai-forest-online",
+  "version": "1.0.0",
+  "description": "سرور آنلاین بازی سامورایی جنگل",
+  "main": "server.js",
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=18" }
+}
