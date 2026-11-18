@@ -16,3 +16,7 @@ services:
         sync: false
       - key: WEBAPP_URL
         sync: false
+      - key: STORAGE_CHAT
+        sync: false
+      - key: APP_SHORTNAME
+        sync: false
