@@ -12,5 +12,7 @@ services:
         sync: false
       - key: ADMIN_IDS
         sync: false
-      - key: REQUIRED_CHANNEL
+      - key: REQUIRED_CHATS
+        sync: false
+      - key: WEBAPP_URL
         sync: false

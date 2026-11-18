@@ -1,0 +1,33 @@
+<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>اسکریپت روبلاکس</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root{--bg:#0f1117;--card:#1a1d27;--tx:#eef0f6;--mut:#8b90a3;--ac:#6c5ce7}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,Tahoma,sans-serif;padding:12px}
+input{width:100%;padding:12px 14px;border-radius:12px;border:0;background:var(--card);color:var(--tx);font-size:16px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:10px 0}
+.chip{white-space:nowrap;padding:6px 12px;border-radius:20px;background:var(--card);color:var(--mut);font-size:13px;cursor:pointer}
+.chip.on{background:var(--ac);color:#fff}
+.card{background:var(--card);border-radius:14px;padding:14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.t{font-weight:600}.m{color:var(--mut);font-size:13px;margin-top:4px}
+button{background:var(--ac);color:#fff;border:0;border-radius:10px;padding:9px 14px;font-size:14px}
+.empty{text-align:center;color:var(--mut);padding:40px 0}
+</style></head><body>
+<input id="q" placeholder="🔍 جستجوی بازی یا اسکریپت…">
+<div class="chips" id="chips"></div><div id="list"></div>
+<script>
+const tg=window.Telegram.WebApp;tg.ready();tg.expand();
+let game="",bot="",timer;const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+async function load(){
+ const d=await (await fetch("/api/scripts?q="+encodeURIComponent($("q").value)+"&game="+encodeURIComponent(game))).json();
+ bot=d.bot;
+ $("chips").innerHTML=["",...d.games].map(g=>`<span class="chip ${g===game?"on":""}" data-g="${esc(g)}">${g?esc(g):"همه"}</span>`).join("");
+ $("list").innerHTML=d.items.length?d.items.map(i=>`<div class="card"><div><div class="t">${esc(i.title)}</div><div class="m">🎮 ${esc(i.game)} • ⭐ ${i.avg} (${i.cnt}) • 👁 ${i.views}</div></div><button data-id="${i.id}">دریافت</button></div>`).join(""):'<div class="empty">چیزی پیدا نشد</div>';
+}
+$("q").oninput=()=>{clearTimeout(timer);timer=setTimeout(load,300)};
+$("chips").onclick=e=>{if(e.target.dataset.g!==undefined){game=e.target.dataset.g;load()}};
+$("list").onclick=e=>{const id=e.target.dataset.id;if(!id)return;const u=`https://t.me/${bot}?start=s_${id}`;tg.initData?tg.openTelegramLink(u):location.href=u};
+load();
+</script></body></html>
