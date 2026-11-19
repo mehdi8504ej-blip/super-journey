@@ -347,7 +347,7 @@ async function doLike(id){if(!need())return;const p=POSTS.get(id);p.liked=!p.lik
  try{const d=await api("like",{method:"POST",body:{id}});p.liked=d.liked;p.likes=d.likes;paint(id)}catch(e){p.liked=!p.liked;p.likes+=p.liked?1:-1;paint(id);onErr(e)}}
 async function doSave(id){if(!need())return;const p=POSTS.get(id);p.saved=!p.saved;paint(id);toast(p.saved?"ذخیره شد":"از ذخیره‌ها حذف شد");
  try{const d=await api("save",{method:"POST",body:{id}});p.saved=d.saved;paint(id);inited.saved=0}catch(e){p.saved=!p.saved;paint(id);onErr(e)}}
-function postMenu(id){const p=POSTS.get(id);const b=[`<button class="act" data-act="copylink" data-id="${id}">🔗 کپی لینک</button>`,`<button class="act" data-act="ext" data-url="https://t.me/${ME.bot}?start=s_${id}">🤖 دریافت فایل در ربات</button>`];
+function postMenu(id){const p=POSTS.get(id);const b=[`<button class="act" data-act="copylink" data-id="${id}">🔗 کپی لینک</button>`,`<button class="act" data-act="sendpm" data-id="${id}">📩 ارسال به پیوی</button>`,`<button class="act" data-act="ext" data-url="https://t.me/${ME.bot}?start=s_${id}">🤖 دریافت فایل در ربات</button>`];
  if(!p.mine)b.push(`<button class="act red" data-act="report" data-id="${id}">🚩 گزارش</button>`);
  if(p.can_del)b.push(`<button class="act red" data-act="delpost" data-id="${id}">🗑 حذف پست</button>`);openSheet("",b.join(""))}
 let lastTap=0,tapT;
@@ -366,6 +366,7 @@ document.addEventListener("click",async e=>{
   case"copy":try{const c=await getCode(id);if(await copyText(c))toast("✅ اسکریپت کپی شد");else{toast("کپی نشد؛ از ربات بگیر");openExt(`https://t.me/${ME.bot}?start=s_${id}`)}}catch(er){onErr(er)}break;
   case"expand":try{const c=await getCode(id);const box=$(".code",a.closest(".post"));box.classList.add("full");$("pre",box).textContent=c;a.remove()}catch(er){onErr(er)}break;
   case"share":{const l=shareLink(id),p=POSTS.get(id);if(tg.openTelegramLink&&INIT)tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(l)}&text=${encodeURIComponent("🎮 "+p.title+" — "+p.game)}`);else if(await copyText(l))toast("لینک کپی شد");break}
+  case"sendpm":closeSheet();try{await api("sendpm",{method:"POST",body:{id}});toast("✅ به پیوی ربات فرستاده شد")}catch(er){onErr(er)}break;
   case"copylink":closeSheet();if(await copyText(shareLink(id)))toast("لینک کپی شد");break;
   case"report":closeSheet();try{await api("report",{method:"POST",body:{id}});toast("گزارش ثبت شد؛ ممنون 🙏")}catch(er){onErr(er)}break;
   case"delpost":if(!confirm("این پست برای همیشه حذف شود؟"))break;closeSheet();try{await api("post_delete",{method:"POST",body:{id}});$$(`[data-id="${id}"]`).forEach(x=>x.remove());POSTS.delete(id);toast("حذف شد");if(stack.length)pop()}catch(er){onErr(er)}break;

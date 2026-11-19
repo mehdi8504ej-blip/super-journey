@@ -2,6 +2,7 @@
 فقط از stdlib + httpx (که همراه python-telegram-bot نصب می‌شود) استفاده می‌کند."""
 import hashlib
 import hmac
+import html as _html
 import json
 import logging
 import os
@@ -16,6 +17,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 CFG = {}
 MAX_VIDEO = 19 * 1024 * 1024      # getFile ربات‌ها حداکثر ۲۰MB را اجازه می‌دهد
 MAX_CODE = 500_000
+REPORT_LIMIT = int(os.environ.get("REPORT_LIMIT", "5"))
 
 
 def init(token, admins, chats, db_path, bot_username, storage_chat, app_short):
@@ -44,6 +46,15 @@ def bg(fn, *a):
 
 def tell(uid, text):
     tg("sendMessage", {"chat_id": uid, "text": text, "disable_web_page_preview": "true"}, timeout=20)
+
+
+def tell_many(ids, text):
+    for i in ids:
+        try:
+            tell(i, text)
+        except Exception:
+            pass
+        time.sleep(0.05)
 
 
 def tell_admins(text):
@@ -238,7 +249,8 @@ def pj(r, c):
 
 def purge(db, sid):
     for t, col in (("scripts", "id"), ("ratings", "script_id"), ("seen", "script_id"),
-                   ("favs", "script_id"), ("likes", "script_id"), ("comments", "script_id")):
+                   ("favs", "script_id"), ("likes", "script_id"), ("comments", "script_id"),
+                   ("reports", "script_id")):
         db.execute(f"DELETE FROM {t} WHERE {col}=?", (sid,))
 
 
@@ -332,6 +344,11 @@ def insert_post(c, kind, title, game, cap, code="", file_id="", thumb=""):
     who = (c.user or {}).get("name", "")
     label = "ویدیو" if kind == "video" else "اسکریپت"
     bg(tell_admins, f"🆕 {label} جدید از {who} ({c.uid})\n«{title}» — {game}\n{link(sid)}")
+    ids = [r[0] for r in c.db.execute(
+        "SELECT g.user_id FROM game_follows g JOIN users u ON u.id=g.user_id WHERE g.game=? AND u.banned=0 AND g.user_id!=?",
+        (game, c.uid)).fetchall()]
+    if ids:
+        bg(tell_many, ids, f"🔔 {label} جدید برای «{game}»:\n«{title}»\n\n{link(sid)}")
     return sid
 
 
@@ -505,7 +522,41 @@ def r_report(c):
     rate(c.uid, "rp", 5, 3600)
     sid = int(c.body().get("id", 0))
     post = get_post(c, sid)
-    bg(tell_admins, f"🚩 گزارش پست #{sid} «{post['title']}» از طرف {(c.user or {}).get('name', '')} ({c.uid})\n{link(sid)}")
+    c.db.execute("INSERT OR IGNORE INTO reports VALUES(?,?,?)", (c.uid, sid, int(time.time())))
+    n = c.db.execute("SELECT COUNT(*) FROM reports WHERE script_id=?", (sid,)).fetchone()[0]
+    who = (c.user or {}).get("name", "")
+    if n >= REPORT_LIMIT and not post["hidden"]:
+        c.db.execute("UPDATE scripts SET hidden=1 WHERE id=?", (sid,))
+        bg(tell_admins, f"🙈 پست #{sid} «{post['title']}» بعد از {n} گزارش مخفی شد.\n{link(sid)}")
+    else:
+        bg(tell_admins, f"🚩 گزارش پست #{sid} «{post['title']}» از طرف {who} ({c.uid}) — مجموع: {n}\n{link(sid)}")
+    c.db.commit()
+    return {}
+
+
+@route("POST", "sendpm")
+def r_sendpm(c):
+    """ارسال پست به پیوی کاربر (داخل چت ربات)."""
+    c.need_write()
+    rate(c.uid, "pm", 10, 600)
+    sid = int(c.body().get("id", 0))
+    get_post(c, sid)
+    if not c.member:
+        raise ApiError(403, "برای دریافت اول در کانال/گروه عضو شو.", join=True)
+    s = c.db.execute("SELECT * FROM scripts WHERE id=?", (sid,)).fetchone()
+    head = f"🎮 {s['title']}\n🕹 {s['game']}\n\n{(s['description'] or '')[:800]}\n\n{link(sid)}"
+    try:
+        if s["kind"] == "video" and s["file_id"]:
+            tg("sendVideo", {"chat_id": c.uid, "video": s["file_id"], "caption": head[:1000]}, timeout=30)
+        else:
+            tg("sendMessage", {"chat_id": c.uid, "text": head[:4000], "disable_web_page_preview": "true"}, timeout=20)
+            code = s["code"] or ""
+            if len(code) <= 3500:
+                tg("sendMessage", {"chat_id": c.uid, "text": f"<pre>{_html.escape(code)}</pre>", "parse_mode": "HTML"}, timeout=20)
+            else:
+                tg("sendDocument", {"chat_id": c.uid}, files={"document": ("script.lua", code.encode())}, timeout=60)
+    except RuntimeError:
+        raise ApiError(400, "اول ربات را استارت کن (/start) و دوباره امتحان کن.")
     return {}
 
 
